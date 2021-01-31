@@ -18,28 +18,20 @@ class ActivityViewModel : ViewModel() {
 
     val getStateObserver: Observer<Unit> = getStateSubject
 
-    init{
-        refreshData()
-    }
+    init {
 
-    fun refreshData(){
         getStateSubject
-                .subscribeOn(Schedulers.io())
-                .switchMap { Repository.getPosts().toObservable() }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { posts ->
-                            _state.value = State.Loaded(posts)
-                        },
-                        {
-                            _state.value = State.Loaded(emptyList())
-                        }
-                )
+            .subscribeOn(Schedulers.io())
+            .switchMap { Repository.getPosts().toObservable() }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { posts ->
+                    _state.value = State.Loaded(posts)
+                },
+                {
+                    _state.value = State.Loaded(emptyList())
+                }
+            )
     }
 
-    fun processAction(action: Action) {
-        when (action) {
-            Action.RefreshData -> refreshData()
-        }
-    }
 }

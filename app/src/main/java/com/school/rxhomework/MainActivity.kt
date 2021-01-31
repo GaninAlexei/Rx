@@ -12,6 +12,7 @@ import com.google.gson.annotations.SerializedName
 import com.school.rxhomework.databinding.ActivityMainBinding
 import com.school.rxhomework.databinding.ItemHolderBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import com.jakewharton.rxbinding4.swiperefreshlayout.refreshes
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,7 +28,9 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater).apply {
             setContentView(root)
 
-            //     compositeDisposable.add(clicks().subscribe(viewModel.getStateObserver::onNext))
+            viewModel.getStateObserver.onNext(Unit)
+            compositeDisposable.add(root.refreshes().subscribe(viewModel.getStateObserver::onNext))
+
             recyclerView.adapter = adapter
             viewModel.state.observe(this@MainActivity) { state ->
                 when (state) {
@@ -38,7 +41,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-            root.setOnRefreshListener { viewModel.processAction(Action.RefreshData) }
         }
     }
 
