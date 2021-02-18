@@ -28,9 +28,6 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater).apply {
             setContentView(root)
 
-            viewModel.getStateObserver.onNext(Unit)
-            compositeDisposable.add(root.refreshes().subscribe(viewModel.getStateObserver::onNext))
-
             recyclerView.adapter = adapter
             viewModel.state.observe(this@MainActivity) { state ->
                 when (state) {
@@ -41,6 +38,9 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+
+            viewModel.getStateObserver.onNext(Unit)
+            compositeDisposable.add(root.refreshes().subscribe(viewModel.getStateObserver::onNext))
         }
     }
 
